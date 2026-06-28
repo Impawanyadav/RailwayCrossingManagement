@@ -45,9 +45,8 @@ public class AuthController {
 	@PostMapping("/login")
 	public ResponseEntity<?> loginUser(@RequestBody LoginDto loginDto ){
 		try {
-			Authentication authentication=authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()))
-			
-					User user=userRepository.findByEmail(loginDto.getEmail()).orElseThrow();
+			Authentication authentication=authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()));
+			User user=userRepository.findByEmail(loginDto.getEmail()).orElseThrow();
 			Map<String, Object> response=new HashMap<>();
 			response.put("id", user.getId());
 			response.put("email", user.getEmail());

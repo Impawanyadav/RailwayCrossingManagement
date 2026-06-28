@@ -18,7 +18,6 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Entity
 @Table
 @Data
@@ -35,6 +34,9 @@ public class User {
 	@Email(message = "Invalid email format")
 	@NotBlank(message = "Email is required")
 	private String email;
+	
+	@Column
+	private String currshift;
 	
 	@Column
 	private String password;

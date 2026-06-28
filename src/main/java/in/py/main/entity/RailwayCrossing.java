@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Entity
 @Table
-@Slf4j
+
 @Data
 public class RailwayCrossing {
 	
@@ -29,7 +29,7 @@ public class RailwayCrossing {
 	@Column
 	private String address;
 	@Column
-	private int pincode;
+	private Long pincode;
 	@Column
 	private String status;
 	@OneToMany(mappedBy = "railwayCrossing", cascade = CascadeType.ALL, orphanRemoval =true, fetch = FetchType.LAZY)

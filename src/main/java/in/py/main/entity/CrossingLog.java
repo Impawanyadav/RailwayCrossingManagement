@@ -1,8 +1,11 @@
 package in.py.main.entity;
 
 import java.time.LocalTime;
+import java.util.List;
 
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -14,7 +17,7 @@ import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
+
 @Table
 @Entity
 @Data
@@ -23,8 +26,13 @@ public class CrossingLog {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column
 	private Long id;
-	@Column
-	private String day;
+	@ElementCollection(fetch = FetchType.LAZY) 
+	@CollectionTable(
+			name = "crossing_log_days", 
+			joinColumns = @JoinColumn(name = "crossing_log_id")
+	)
+	@Column(name = "day_of_week") 
+	private List<String> days;
 	@Column
 	private LocalTime closedFrom;
 	@Column

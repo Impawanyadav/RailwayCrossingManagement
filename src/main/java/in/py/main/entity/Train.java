@@ -16,7 +16,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-@Slf4j
+
 @Table
 @Entity
 @Data

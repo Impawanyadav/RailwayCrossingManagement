@@ -12,7 +12,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-@Slf4j
+
 @Table
 @Entity
 @Data
@@ -29,6 +29,7 @@ public class DutyAssign {
 	@JoinColumn(name="employee_id", nullable = false)
 	private User user;
 	
+	
 	@Column
 	private LocalDate dutyDate;
 	
@@ -37,6 +38,7 @@ public class DutyAssign {
 	
 	@Column
 	private String status;
+	
 	
 
 }
