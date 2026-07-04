@@ -80,7 +80,7 @@ Open your web browser and navigate to:
 Upon the first launch, the application automatically seeds the database. Use the following credentials to log in:
 
 **System Administrator:**
-* Email: admin@railway.in
+* Email: admin@railway.com
 * Password: admin
 
 **Gateman Accounts:**
