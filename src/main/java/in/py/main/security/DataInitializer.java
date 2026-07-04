@@ -33,7 +33,7 @@ public class DataInitializer implements CommandLineRunner {
         // 1. Create Admin (Gets ID = 1)
         User admin = new User();
         admin.setName("System Admin");
-        admin.setEmail("admin@railway.in");
+        admin.setEmail("admin@railway.com");
         admin.setPassword(passwordEncoder.encode("admin"));
         admin.setRole("ROLE_ADMIN");
         admin.setStatus("ACTIVE");
