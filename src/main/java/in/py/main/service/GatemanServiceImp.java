@@ -1,5 +1,6 @@
 package in.py.main.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import java.util.stream.Collectors;
@@ -39,6 +40,7 @@ public class GatemanServiceImp implements GatemanService{
 		UserDto userDto=modelMapper.map(user, UserDto.class);
 		
 		List<DutyAssign> dutyDtos=dutyAssignRepository.findUpcomingDutiesByGatemanId(id);
+		if (dutyDtos == null) dutyDtos = new ArrayList<>();
 		
 		List<DutyDto> duty=dutyDtos.stream()
 				.map(du->modelMapper.map(du, DutyDto.class))
@@ -64,14 +66,14 @@ public class GatemanServiceImp implements GatemanService{
 			DutyAssign upcomingDutyAssign=dutyAssignRepository.findTodayUpcomingDuty(crossingId, newGatemanId)
 					.orElseThrow(()-> new RuntimeException("Punch In Failed"));
 			
-			upcomingDutyAssign.setStatus("OONGOING");
+			upcomingDutyAssign.setStatus("ONGOING");
 			dutyAssignRepository.save(upcomingDutyAssign);
 			return "Successfully Punched In";
 		
 		
 	}
 
-	@Override
+	/*@Override
 	public String operateGate(Long crossingId, String action) throws IllegalArgumentException {
 		
 		// TODO Auto-generated method stub
@@ -91,7 +93,26 @@ public class GatemanServiceImp implements GatemanService{
 		railwayCrossingRepository.save(crossing);
 				
 		return crossing.getAddress() + " is now " + crossing.getStatus();
-	}
+	}*/
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 
 	

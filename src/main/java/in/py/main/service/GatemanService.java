@@ -12,6 +12,6 @@ public interface GatemanService {
 	
 	public String punchInNewGateman(Long crossingId, Long newGatemanId);
 	
-	public String operateGate(Long crossingId, String action) throws IllegalArgumentException;
+
 
 }

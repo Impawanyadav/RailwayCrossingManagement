@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Indian Railway</title>
+	<link rel="stylesheet" href="/index.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+		integrity="sha512-pVn6X... (trimmed)" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+</head>
+
+<body>
+
+	<div class="header">
+
+
+
+
+
+		<div class="logo"><button class="iconButton" id="menuBtn"><i class="fa-solid fa-bars"></i></button></div>
+		<div class="logo">Indian Railway</div>
+		<div class="contact">
+			<div class="c1"><button class="iconButton2" id="iconButton2"><i class="fa-regular fa-user"></i> </button>
+			</div>
+			<div class="c1 sidebar">Contact Us </div>
+			<div class="c1 sidebar">About Us </div>
+
+
+		</div>
+
+	</div>
+	
+	<div class="side-menu" id="sideMenu">
+		<button id="close"><i class="fa-solid fa-xmark"></i></button>
+		<a th:href="@{/home}">Home</a>
+		<a th:href="@{/crossing}">Railway Crossing</a>
+		<a th:href="@{/...}">//</a>
+		<a th:href="@{/...}">//</a>
+		<a th:href="@{/...}">//</a>
+		<a th:href="@{/...}">//</a>
+		<a th:href="@{/logOut}">Logout</a>
+		<a href="#">//</a>
+	</div>
+
+
+	<div class="user-side-menu" id="userSideMenu">
+		<button id="userClose"><i class="fa-solid fa-xmark"></i></button>
+		<a href="#"><span th:text="${session.usersName}"></span></a>
+		<a th:href="@{/...}">//</a>
+		<a th:href="@{/...}">//</a>
+		<a th:href="@{/...}">//</a>
+		<a th:href="@{/...}">//</a>
+		<a href="#">---</a>
+		<a href="#">---</a>
+		<a href="#">//</a>
+	</div>
+	<div class="main">
+		<div class="mainIn">
+			
+			
+			<div>
+			        <i class="fa-solid fa-magnifying-glass"></i> 
+			        <input type="number" id="ID" placeholder="Enter">
+			        
+			        <button onclick="searchCrossing()">Search</button>
+			      </div>
+
+
+
+           <div id="displayRailwayCrossing"></div>
+			
+			
+
+
+		</div>
+
+	</div>
+
+	<script src="/js/index.js"></script>
+	<script src="/js/railwaycrossing1.js"></script>
+	
+	
+</body>
+
+</html>

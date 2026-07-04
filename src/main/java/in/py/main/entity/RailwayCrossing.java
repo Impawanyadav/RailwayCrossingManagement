@@ -38,7 +38,8 @@ public class RailwayCrossing {
 	
 	@OneToMany(mappedBy = "railwayCrossing", cascade = CascadeType.ALL, orphanRemoval =true, fetch = FetchType.LAZY)
 	private List<DutyAssign> dutyAssign;
-	
+	@OneToMany(mappedBy ="railwayCrossing", cascade = CascadeType.ALL, orphanRemoval =true, fetch = FetchType.LAZY )
+	private List<DailyCrossingLogsRealTime> dailyCrossingLogsRealTimes;
 	
      
 }

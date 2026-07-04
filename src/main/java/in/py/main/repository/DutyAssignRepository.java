@@ -20,10 +20,12 @@ public interface DutyAssignRepository extends JpaRepository<DutyAssign, Long> {
 	@Query("SELECT d FROM DutyAssign d WHERE d.railwayCrossing.id = :crossingId AND d.status = 'ONGOING'")
     Optional<DutyAssign> findActiveDutyByCrossingId(@Param("crossingId") Long crossingId);
 	
-	@Query("SELECT d FROM DutyAssign d WHERE d.user.id = :gatemanId AND d.status = 'UPCOMING' AND d.dutyDate >= CURRENT_DATE ORDER BY d.dutyDate ASC")
-    List<DutyAssign> findUpcomingDutiesByGatemanId(@Param("gatemanId") Long gatemanId); 
+	@Query("SELECT d FROM DutyAssign d WHERE d.user.id = :gatemanId AND d.status IN ('UPCOMING', 'ONGOING') AND d.dutyDate >= CURRENT_DATE ORDER BY d.dutyDate ASC")
+	List<DutyAssign> findUpcomingDutiesByGatemanId(@Param("gatemanId") Long gatemanId);
 	
     
 	@Query("SELECT d FROM DutyAssign d WHERE d.railwayCrossing.id = :crossingId AND d.user.id = :gatemanId AND d.status = 'UPCOMING' AND d.dutyDate = CURRENT_DATE")
 	Optional<DutyAssign> findTodayUpcomingDuty(@Param("crossingId") Long crossingId, @Param("gatemanId") Long gatemanId);
+	
+	Optional<DutyAssign> findByUserIdAndRailwayCrossingIdAndStatus(Long gatemanId, Long crossingId, String status);
 }

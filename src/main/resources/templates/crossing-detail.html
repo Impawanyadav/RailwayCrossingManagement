@@ -1,0 +1,96 @@
+
+
+</html><!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Indian Railway</title>
+	<link rel="stylesheet" href="/index.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+		integrity="sha512-pVn6X... (trimmed)" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+</head>
+
+<body>
+
+	<div class="header">
+
+
+
+
+
+		<div class="logo"><button class="iconButton" id="menuBtn"><i class="fa-solid fa-bars"></i></button></div>
+		<div class="logo">Indian Railway</div>
+		<div class="contact">
+			<div class="c1"><button class="iconButton2" id="iconButton2"><i class="fa-regular fa-user"></i> </button>
+			</div>
+			<div class="c1 sidebar">Contact Us </div>
+			<div class="c1 sidebar">About Us </div>
+
+
+		</div>
+
+	</div>
+	
+	<div class="side-menu" id="sideMenu">
+		<button id="close"><i class="fa-solid fa-xmark"></i></button>
+		<a th:href="@{/home}">Home</a>
+		<a th:href="@{/RailwayCrossing/rcpage}">Railway Crossing</a>
+		
+		<a th:href="@{/logOut}">Logout</a>
+		<a href="#">//</a>
+	</div>
+
+
+	<div class="user-side-menu" id="userSideMenu">
+		<button id="userClose"><i class="fa-solid fa-xmark"></i></button>
+		<a href="#"><span th:text="${userDto.name}"></span></a>
+		<a href="#"><span th:text="${userDto.email}"></span></a>
+		<a href="#"><span th:text="${userDto.displayRole}"></span></a>
+		<a href="#"><span th:text="${userDto.currShift}"></span></a>
+		
+	</div>
+	<div class="main">
+		<div class="mainIn">
+			
+			
+			
+
+
+
+			<div class="mainIn">
+				<div style="margin-bottom: 20px;">
+				    <a th:href="@{/RailwayCrossing/rcpage}" style="display: inline-block; padding: 10px 15px; background-color: #f1f1f1; color: #1c7c8c; text-decoration: none; border: 1px solid #ddd; border-radius: 4px; font-weight: bold; font-family: sans-serif; transition: 0.2s;">
+				        <i class="fa-solid fa-arrow-left" style="margin-right: 5px;"></i> Back
+				    </a>
+				</div>
+
+				<h2 style="color: #2d2d2d; border-bottom: 2px solid #1c7c8c; padding-bottom: 10px;">Crossing Dashboard</h2>
+
+				<!-- BOX 1: Details & Duty -->
+				<div id="box1-details" style="margin-bottom: 30px;"></div>
+
+				<!-- BOX 2: Expected/Scheduled Logs -->
+				<h3 style="color: #2d2d2d;">Scheduled Timings</h3>
+				<div id="box2-schedules" style="margin-bottom: 30px;"></div>
+
+				<!-- BOX 3: Today's Real-time Completed Logs -->
+				<h3 style="color: #2d2d2d;">Today's Activity</h3>
+				<div id="box3-todayLogs" style="margin-bottom: 30px;"></div>
+			</div>
+			
+			
+
+
+		</div>
+
+	</div>
+
+	<script src="/js/index.js"></script>
+	<script src="/js/crossing-detail.js"></script>
+	
+	
+</body>
+
+</html>

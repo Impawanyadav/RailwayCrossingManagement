@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Indian Railway</title>
+	<link rel="stylesheet" href="/index.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+		integrity="sha512-pVn6X... (trimmed)" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+</head>
+
+<body>
+
+	<div class="header">
+
+
+
+
+
+		<div class="logo"><button class="iconButton" id="menuBtn"><i class="fa-solid fa-bars"></i></button></div>
+		<div class="logo">Indian Railway</div>
+		<div class="contact">
+			<div class="c1"><button class="iconButton2" id="iconButton2"><i class="fa-regular fa-user"></i> </button>
+			</div>
+			<div class="c1 sidebar">Contact Us </div>
+			<div class="c1 sidebar">About Us </div>
+
+
+		</div>
+
+	</div>
+	
+	<div class="side-menu" id="sideMenu">
+		<button id="close"><i class="fa-solid fa-xmark"></i></button>
+		<a th:href="@{/home}">Home</a>
+		<a th:href="@{/RailwayCrossing/rcpage}">Railway Crossing</a>
+		
+		<a th:href="@{/logOut}">Logout</a>
+		<a href="#">//</a>
+	</div>
+
+
+	<div class="user-side-menu" id="userSideMenu">
+		<button id="userClose"><i class="fa-solid fa-xmark"></i></button>
+		<a href="#"><span th:text="${userDto.name}"></span></a>
+				<a href="#"><span th:text="${userDto.email}"></span></a>
+				<a href="#"><span th:text="${userDto.displayRole}"></span></a>
+				<a href="#"><span th:text="${userDto.currShift}"></span></a>
+	</div>
+	<div class="main">
+		<div class="mainIn">
+			
+			
+			
+			<div layout:fragment="content">
+			        
+			        <h2 style="text-align: center; color: #2d2d2d; margin-top: 20px; font-size: 2rem;">Welcome to the Admin Control Panel</h2>
+			        
+			        <!-- Centered Container for Admin Links -->
+			        <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; max-width: 1000px; margin: 40px auto; padding: 20px;">
+			            
+			            <!-- Add Gateman Card -->
+			            <a th:href="@{/admin/add-gateman}" style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 200px; height: 150px; background-color: white; border: 1px solid #ddd; border-radius: 10px; text-decoration: none; color: #333; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.2s, box-shadow 0.2s;">
+			                <i class="fa-solid fa-user-plus" style="font-size: 2.5rem; color: #1c7c8c; margin-bottom: 15px;"></i>
+			                <span style="font-weight: bold; font-size: 1.1rem;">Add Gateman</span>
+			            </a>
+
+			            <!-- Add Crossing Card -->
+			            <a th:href="@{/admin/add-crossing}" style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 200px; height: 150px; background-color: white; border: 1px solid #ddd; border-radius: 10px; text-decoration: none; color: #333; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.2s, box-shadow 0.2s;">
+			                <i class="fa-solid fa-road-barrier" style="font-size: 2.5rem; color: #1c7c8c; margin-bottom: 15px;"></i>
+			                <span style="font-weight: bold; font-size: 1.1rem;">Add Crossing</span>
+			            </a>
+
+			            <!-- Add Train Card -->
+			            <a th:href="@{/admin/add-train}" style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 200px; height: 150px; background-color: white; border: 1px solid #ddd; border-radius: 10px; text-decoration: none; color: #333; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.2s, box-shadow 0.2s;">
+			                <i class="fa-solid fa-train" style="font-size: 2.5rem; color: #1c7c8c; margin-bottom: 15px;"></i>
+			                <span style="font-weight: bold; font-size: 1.1rem;">Add Train</span>
+			            </a>
+
+			            <!-- Assign Duty Card -->
+			            <a th:href="@{/admin/assign-duty}" style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 200px; height: 150px; background-color: white; border: 1px solid #ddd; border-radius: 10px; text-decoration: none; color: #333; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.2s, box-shadow 0.2s;">
+			                <i class="fa-solid fa-clipboard-user" style="font-size: 2.5rem; color: #1c7c8c; margin-bottom: 15px;"></i>
+			                <span style="font-weight: bold; font-size: 1.1rem;">Assign Duty</span>
+			            </a>
+
+			            <!-- Schedule Crossing Log Card -->
+			            <a th:href="@{/admin/add-crossing-log}" style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 200px; height: 150px; background-color: white; border: 1px solid #ddd; border-radius: 10px; text-decoration: none; color: #333; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.2s, box-shadow 0.2s;">
+			                <i class="fa-solid fa-calendar-days" style="font-size: 2.5rem; color: #1c7c8c; margin-bottom: 15px;"></i>
+			                <span style="font-weight: bold; font-size: 1.1rem;">Schedule Log</span>
+			            </a>
+
+			        </div>
+
+			        <!-- Adding a quick hover effect using an inline style block for the cards -->
+			        <style>
+			            a[href^="/admin/"]:hover {
+			                transform: translateY(-5px);
+			                box-shadow: 0 8px 15px rgba(0,0,0,0.15) !important;
+			                border-color: #1c7c8c !important;
+			            }
+			            a[href^="/admin/"]:hover span {
+			                color: #1c7c8c;
+			            }
+			        </style>
+
+			    </div>
+
+
+		</div>
+
+	</div>
+	<th:block layout:fragment="page-scripts"></th:block>
+
+	<script src="/js/index.js"></script>
+	
+	
+	
+</body>
+
+</html>

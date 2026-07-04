@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Indian Railway</title>
+	<link rel="stylesheet" href="/index.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+		integrity="sha512-pVn6X... (trimmed)" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+</head>
+
+<body>
+
+	<div class="header">
+
+
+
+
+
+		<div class="logo"><button class="iconButton" id="menuBtn"><i class="fa-solid fa-bars"></i></button></div>
+		<div class="logo">Indian Railway</div>
+		<div class="contact">
+			<div class="c1"><button class="iconButton2" id="iconButton2"><i class="fa-regular fa-user"></i> </button>
+			</div>
+			<div class="c1 sidebar">Contact Us </div>
+			<div class="c1 sidebar">About Us </div>
+
+
+		</div>
+
+	</div>
+	
+	<div class="side-menu" id="sideMenu">
+		<button id="close"><i class="fa-solid fa-xmark"></i></button>
+		<a th:href="@{/home}">Home</a>
+		<a th:href="@{/RailwayCrossing/rcpage}">Railway Crossing</a>
+		
+		<a th:href="@{/logOut}">Logout</a>
+		<a href="#">//</a>
+	</div>
+
+
+	<div class="user-side-menu" id="userSideMenu">
+		<button id="userClose"><i class="fa-solid fa-xmark"></i></button>
+		<a href="#"><span th:text="${userDto.name}"></span></a>
+				<a href="#"><span th:text="${userDto.email}"></span></a>
+				<a href="#"><span th:text="${userDto.displayRole}"></span></a>
+				<a href="#"><span th:text="${userDto.currShift}"></span></a>
+	</div>
+	
+		<div class="mainIn">
+			
+			
+			
+			<div id="gatemanDashboard" style="max-width: 800px; margin: 20px auto; font-family: sans-serif; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+			    
+			    <!-- Hidden input to store Gateman ID securely from Thymeleaf -->
+			    <input type="hidden" id="gatemanId" th:value="${userDto != null ? userDto.id : ''}">
+
+			    <h2 style="color: #2d2d2d; border-bottom: 2px solid #1c7c8c; padding-bottom: 10px;">Gateman Duty Portal</h2>
+
+			    <!-- Alert Message Box -->
+			    <div id="messageBox" style="display: none; padding: 10px; margin-bottom: 20px; border-radius: 5px; font-weight: bold;"></div>
+
+			    <!-- Gateman Profile Details -->
+			    <div id="profileSection" style="background: #f8f9fa; padding: 15px; border-radius: 5px; margin-bottom: 20px; border: 1px solid #e9ecef;">
+			        <h3 style="margin-top: 0; color: #1c7c8c; font-size: 1.1em;">Profile Details</h3>
+			        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+			            <p style="margin: 5px 0;"><strong>Name:</strong> <span id="profileName">Loading...</span></p>
+			            <p style="margin: 5px 0;"><strong>Email:</strong> <span id="profileEmail">Loading...</span></p>
+			            <p style="margin: 5px 0;"><strong>Role:</strong> <span id="profileRole">Loading...</span></p>
+			            <p style="margin: 5px 0;"><strong>Current Shift:</strong> <span id="profileShift">Loading...</span></p>
+			        </div>
+			    </div>
+
+			    <!-- Dynamic Action Area -->
+			    <div id="dashboardActionWrapper" style="margin-bottom: 30px;">
+			        <div id="loadingSpinner" style="text-align: center; padding: 20px; color: #666;">Loading duty status...</div>
+
+			        <!-- VIEW 1: Punch In (Shows if there is an upcoming duty but not currently active) -->
+			        <div id="punchInView" style="display: none; background: #eef8f5; padding: 20px; border: 1px solid #a3d4c7; border-radius: 5px; text-align: center;">
+			            <h3 style="margin-top: 0; color: #0f5132;">Next Scheduled Duty</h3>
+			            <p id="nextDutyDetails" style="font-size: 1.1em; margin-bottom: 20px;"></p>
+			            <button id="punchInBtn" onclick="handlePunchIn()" style="background: #1c7c8c; color: white; border: none; padding: 12px 24px; font-size: 1.1em; border-radius: 5px; cursor: pointer; font-weight: bold;">
+			                PUNCH IN NOW
+			            </button>
+			        </div>
+
+			        <!-- VIEW 2: Gate Logs (Shows if the gateman is actively punched in) -->
+			        <div id="activeGateView" style="display: none; background: #fff3cd; padding: 20px; border: 1px solid #ffe69c; border-radius: 5px;">
+			            <h3 style="margin-top: 0; color: #856404; display: flex; justify-content: space-between; align-items: center;">
+			                <span><span style="display:inline-block; width:10px; height:10px; background:green; border-radius:50%; margin-right:8px;"></span> Shift Active</span>
+			                <span id="activeCrossingDetails" style="font-size: 0.8em; color: #666;"></span>
+			            </h3>
+			            
+			            <div style="display: flex; gap: 10px; margin-top: 15px;">
+			                <input type="number" id="trainNumberInput" placeholder="Enter Train Number" style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 1em;">
+			                <button onclick="handleCloseGate()" style="background: #dc3545; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold;">CLOSE GATE</button>
+			                <button onclick="handleOpenGate()" style="background: #198754; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold;">OPEN GATE</button>
+			            </div>
+			        </div>
+			    </div>
+
+			    <!-- All Upcoming Duties List -->
+			    <div id="allDutiesSection">
+			        <h3 style="color: #1c7c8c; border-bottom: 1px solid #eee; padding-bottom: 5px;">All Upcoming Duties</h3>
+			        <div id="dutiesList" style="margin-top: 15px;">
+			            <!-- Duties will be injected here by JavaScript -->
+			        </div>
+			    </div>
+
+			</div>
+			
+			
+			
+	</div>
+	
+	<script>
+	    let activeCrossingId = null; // Stores the crossing ID context for open/close operations
+
+	    async function loadDashboardData() {
+	        const userId = document.getElementById('gatemanId').value;
+	        if (!userId) return;
+
+	        try {
+	            const res = await fetch(`/api/userDashboard/user/${userId}`);
+	            const data = await res.json();
+	            
+	            // 1. Populate Profile Data
+	            document.getElementById('profileName').textContent = data.user.name || 'N/A';
+	            document.getElementById('profileEmail').textContent = data.user.email || 'N/A';
+	            document.getElementById('profileRole').textContent = data.user.role ? data.user.role.replace('ROLE_', '') : 'GATEMAN';
+	            document.getElementById('profileShift').textContent = data.user.currShift || 'N/A';
+
+	            document.getElementById('loadingSpinner').style.display = 'none';
+
+	            // Check your Java logic: you spelled it "OONGOING" in GatemanServiceImp!
+	            const ongoingDuty = data.dutyAssign.find(d => d.status === 'ONGOING' || d.status === 'ONGOING');
+
+	            if (ongoingDuty) {
+	                // User is punched in. Show Gate Controls.
+	                activeCrossingId = ongoingDuty.railwayCrossing.id;
+	                document.getElementById('activeGateView').style.display = 'block';
+	                document.getElementById('activeCrossingDetails').textContent = `Location: ${ongoingDuty.railwayCrossing.address}`;
+	            } else {
+	                // User is NOT punched in. Look for the next upcoming duty.
+	                const nextDuty = data.dutyAssign.find(d => d.status === 'UPCOMING');
+	                if (nextDuty) {
+	                    activeCrossingId = nextDuty.railwayCrossing.id; // Store ID for the punch-in function
+	                    document.getElementById('punchInView').style.display = 'block';
+	                    document.getElementById('nextDutyDetails').innerHTML = `
+	                        <strong>Crossing:</strong> ${nextDuty.railwayCrossing.address} <br>
+	                        <strong>Date:</strong> ${nextDuty.dutyDate} <br>
+	                        <strong>Shift:</strong> ${nextDuty.shift}
+	                    `;
+	                }
+	            }
+
+	            // 3. Populate All Upcoming Duties Table
+	            const dutiesListContainer = document.getElementById('dutiesList');
+	            const upcomingDuties = data.dutyAssign.filter(d => d.status === 'UPCOMING');
+	            
+	            if (upcomingDuties.length === 0) {
+	                dutiesListContainer.innerHTML = "<p style='color: #666;'>No upcoming duties assigned.</p>";
+	            } else {
+	                let html = '<table style="width: 100%; border-collapse: collapse; text-align: left;">';
+	                html += '<tr style="background: #f1f1f1;"><th style="padding: 10px; border: 1px solid #ddd;">Date</th><th style="padding: 10px; border: 1px solid #ddd;">Shift</th><th style="padding: 10px; border: 1px solid #ddd;">Crossing Location</th></tr>';
+	                upcomingDuties.forEach(duty => {
+	                    html += `<tr>
+	                                <td style="padding: 10px; border: 1px solid #ddd;">${duty.dutyDate}</td>
+	                                <td style="padding: 10px; border: 1px solid #ddd;">${duty.shift}</td>
+	                                <td style="padding: 10px; border: 1px solid #ddd;">${duty.railwayCrossing.address || 'Crossing ' + duty.railwayCrossing.id}</td>
+	                             </tr>`;
+	                });
+	                html += '</table>';
+	                dutiesListContainer.innerHTML = html;
+	            }
+
+	        } catch (error) {
+	            console.error(error);
+	            showMessage("Error loading dashboard data.", "error");
+	        }
+	    }
+
+	    // --- API Calls ---
+
+	    async function handlePunchIn() {
+	        const userId = document.getElementById('gatemanId').value;
+	        if (!activeCrossingId || !userId) return;
+
+	        try {
+	            const res = await fetch(`/api/userDashboard/${activeCrossingId}/punch-in?gatemanId=${userId}`, { method: 'POST' });
+	            if (res.ok) {
+	                location.reload(); // Reload page to switch to Gate Logs view
+	            } else {
+	                const err = await res.text();
+	                showMessage("Punch In Failed: " + err, "error");
+	            }
+	        } catch (e) {
+	            showMessage("Network Error.", "error");
+	        }
+	    }
+
+	    async function handleCloseGate() {
+	        const userId = document.getElementById('gatemanId').value;
+	        const trainNumber = document.getElementById('trainNumberInput').value;
+
+	        if (!trainNumber) {
+	            showMessage("Please enter a Train Number.", "error");
+	            return;
+	        }
+
+	        // Mapping to CrossingLogEntryGatemanDto
+	        const payload = {
+	            crossingId: activeCrossingId,
+	            trainNumber: parseInt(trainNumber),
+	            userId: parseInt(userId)
+	        };
+
+	        try {
+	            const res = await fetch(`/api/userDashboard/close`, {
+	                method: 'POST',
+	                headers: { 'Content-Type': 'application/json' },
+	                body: JSON.stringify(payload)
+	            });
+	            
+	            const msg = await res.text();
+	            if (res.ok) {
+	                showMessage(msg, "success");
+	                document.getElementById('trainNumberInput').value = ''; // Clear input
+	            } else {
+	                showMessage("Error: " + msg, "error");
+	            }
+	        } catch (e) {
+	            showMessage("Network Error.", "error");
+	        }
+	    }
+
+	    async function handleOpenGate() {
+	        const userId = document.getElementById('gatemanId').value;
+
+	        try {
+	            const res = await fetch(`/api/userDashboard/open?userId=${userId}&crossingId=${activeCrossingId}`, { 
+	                method: 'PUT' 
+	            });
+	            
+	            const msg = await res.text();
+	            if (res.ok) {
+	                showMessage(msg, "success");
+	            } else {
+	                showMessage("Error: " + msg, "error");
+	            }
+	        } catch (e) {
+	            showMessage("Network Error.", "error");
+	        }
+	    }
+
+	    function showMessage(msg, type) {
+	        const box = document.getElementById('messageBox');
+	        box.style.display = 'block';
+	        box.textContent = msg;
+	        box.style.backgroundColor = type === 'success' ? '#d4edda' : '#f8d7da';
+	        box.style.color = type === 'success' ? '#155724' : '#721c24';
+	        box.style.border = type === 'success' ? '1px solid #c3e6cb' : '1px solid #f5c6cb';
+	    }
+
+	    // Initialize dashboard on load
+	    document.addEventListener("DOMContentLoaded", loadDashboardData);
+	</script>
+	
+
+	<script src="/js/index.js"></script>
+	
+	
+	
+</body>
+
+</html>

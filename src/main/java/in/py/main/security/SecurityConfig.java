@@ -14,10 +14,18 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+	
+	private final CustomSuccessHandler customSuccessHandler;
+
+	public SecurityConfig(CustomSuccessHandler customSuccessHandler) {
+		this.customSuccessHandler = customSuccessHandler;
+	}
+
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 	    return new BCryptPasswordEncoder();
 	}
+	
 	@Bean
 	public ModelMapper modelMapper() {
 		return new ModelMapper();
@@ -33,12 +41,26 @@ public class SecurityConfig {
 		http
 		.csrf(csrf-> csrf.disable())
 		.authorizeHttpRequests(auth-> auth
-				.requestMatchers("/auth/**").permitAll()
-				.anyRequest().permitAll()
-				//.anyRequest().authenticated()
-				);
-		return http.build();
+			
+				.requestMatchers("/auth/**", "/css/**", "/js/**", "/login").permitAll()
+				.requestMatchers("/api/admin/**").hasRole("ADMIN")
+				
+				.requestMatchers("/admin/**").hasRole("ADMIN")
+				.requestMatchers("/gateman/**").hasRole("GATEMAN")
+				
+				.anyRequest().authenticated()
+		)
+		.formLogin(form -> form
+				.loginPage("/login") 
+				.successHandler(customSuccessHandler) 
+				.permitAll()
+		)
+		.logout(logout -> logout
+				.logoutUrl("/logOut")
+				.logoutSuccessUrl("/login?logout")
+				.permitAll()
+		);
 		
+		return http.build();
 	}
-
 }

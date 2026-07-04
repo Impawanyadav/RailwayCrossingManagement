@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{base-layout}">
+<head>
+    <title>Add New Railway Crossing</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+
+    <div layout:fragment="content" class="p-8">
+        <div class="flex justify-between items-center border-b-2 border-[#1c7c8c] pb-4 mb-8">
+            <h2 class="text-3xl font-bold text-gray-800">Add New Railway Crossing</h2>
+            <a th:href="@{/admin/dashboard}" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded transition-colors shadow">
+                Back to Dashboard
+            </a>
+        </div>
+
+        <div class="max-w-2xl bg-white shadow-lg rounded-lg p-8 border border-gray-200">
+            <!-- REMOVED the 'submit' event listener from the form tag -->
+            <form id="addCrossingForm" class="space-y-6">
+                <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+                    <div class="md:col-span-2">
+                        <label for="address" class="block text-sm font-semibold text-gray-700 mb-1">Crossing Address / Location</label>
+                        <textarea id="address" name="address" rows="3" required placeholder="e.g., 121 Main Railway Ave"
+                            class="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#1c7c8c]"></textarea>
+                    </div>
+                    <div>
+                        <label for="pincode" class="block text-sm font-semibold text-gray-700 mb-1">Area Pincode</label>
+                        <input type="number" id="pincode" name="pincode" required placeholder="e.g., 226010"
+                            class="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#1c7c8c]">
+                    </div>
+                    <div>
+                        <label for="status" class="block text-sm font-semibold text-gray-700 mb-1">Initial Status</label>
+                        <select id="status" name="status" class="block w-full px-4 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#1c7c8c]">
+                            <option value="ACTIVE" selected>Active (Open)</option>
+                            <option value="INACTIVE">Inactive (Closed/Maintenance)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="messageBox" class="hidden px-4 py-3 rounded relative shadow-sm" role="alert"></div>
+
+                <div class="flex justify-end pt-6 border-t border-gray-200">
+                    <!-- CHANGED: type="button" and added onclick="submitCrossing()" -->
+                    <button type="button" onclick="submitCrossing()" id="submitBtn" class="bg-[#1c7c8c] hover:bg-[#15626f] text-white font-bold py-3 px-8 rounded shadow-md transition-colors flex items-center gap-2">
+                        <i class="fa-solid fa-plus"></i> Save Crossing
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <th:block layout:fragment="page-scripts">
+        <script>
+            async function submitCrossing() {
+                const messageBox = document.getElementById('messageBox');
+                const submitBtn = document.getElementById('submitBtn');
+                const form = document.getElementById('addCrossingForm');
+                
+                messageBox.classList.add('hidden');
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+
+                const payload = {
+                    address: document.getElementById('address').value,
+                    pincode: parseInt(document.getElementById('pincode').value),
+                    status: document.getElementById('status').value
+                };
+
+                try {
+                    const response = await fetch('/api/admin/addCrossing', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    const responseText = await response.text(); 
+
+                    if (response.ok) {
+                        messageBox.className = "bg-green-100 border-l-4 border-green-500 text-green-800 p-4 mb-4 block rounded";
+                        messageBox.innerHTML = `<strong>Success:</strong> ${responseText}`;
+                        form.reset();
+                    } else {
+                        messageBox.className = "bg-red-100 border-l-4 border-red-500 text-red-800 p-4 mb-4 block rounded";
+                        messageBox.innerHTML = `<strong>Error:</strong> ${responseText}`;
+                        messageBox.classList.remove('hidden');
+                    }
+                } catch (error) {
+                    messageBox.className = "bg-red-100 border-l-4 border-red-500 text-red-800 p-4 mb-4 block rounded";
+                    messageBox.innerHTML = "<strong>System Error:</strong> Could not connect to the server.";
+                    messageBox.classList.remove('hidden');
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fa-solid fa-plus"></i> Save Crossing';
+                }
+            }
+        </script>
+    </th:block>
+</body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{base-layout}">
+<head>
+    <title>Add New Gateman</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+
+    <!-- This content gets injected into your main base-layout shell -->
+    <div layout:fragment="content" class="p-8">
+        
+        <div class="flex justify-between items-center border-b-2 border-[#1c7c8c] pb-4 mb-8">
+            <h2 class="text-3xl font-bold text-gray-800">Register New Gateman</h2>
+            <a th:href="@{/admin/dashboard}" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded transition-colors">
+                Back to Dashboard
+            </a>
+        </div>
+
+        <div class="max-w-2xl bg-white shadow-md rounded-lg p-6 border border-gray-200">
+            
+            <!-- We will handle the form submission via JavaScript (fetch) to hit your existing REST AuthController -->
+            <form id="addGatemanForm" class="space-y-6">
+                
+                <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-gray-700">Full Name</label>
+                        <input type="text" id="name" required
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#1c7c8c] focus:border-[#1c7c8c]">
+                    </div>
+
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
+                        <input type="email" id="email" required
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#1c7c8c] focus:border-[#1c7c8c]">
+                    </div>
+
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700">Temporary Password</label>
+                        <input type="password" id="password" required
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#1c7c8c] focus:border-[#1c7c8c]">
+                    </div>
+                    
+                    <div>
+                        <label for="currshift" class="block text-sm font-medium text-gray-700">Initial Shift</label>
+                        <select id="currshift" name="currshift" required
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[#1c7c8c] focus:border-[#1c7c8c]">
+                            <option value="" disabled selected>Select Shift</option>
+                            <option value="Morning">Morning (06:00 - 14:00)</option>
+                            <option value="Evening">Evening (14:00 - 22:00)</option>
+                            <option value="Night">Night (22:00 - 06:00)</option>
+                            
+                        </select>
+                    </div>
+
+                    <!-- Role is hidden and hardcoded to GATEMAN since Admin is adding a Gateman -->
+                    <input type="hidden" id="role" value="ROLE_GATEMAN">
+                </div>
+
+                <div id="messageBox" class="hidden px-4 py-3 rounded relative" role="alert"></div>
+
+                <div class="flex justify-end pt-4 border-t border-gray-200">
+                    <button type="submit" class="bg-[#1c7c8c] hover:bg-[#15626f] text-white font-bold py-2 px-6 rounded shadow transition-colors">
+                        Register Gateman
+                    </button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+    <!-- Script to handle hitting your REST AuthController -->
+    <th:block layout:fragment="page-scripts">
+        <script>
+            document.getElementById('addGatemanForm').addEventListener('submit', async function(e) {
+                e.preventDefault(); // Stop normal form submission
+
+                const messageBox = document.getElementById('messageBox');
+                messageBox.classList.add('hidden'); // Hide previous messages
+
+                const payload = {
+                    name: document.getElementById('name').value,
+                    email: document.getElementById('email').value,
+                    password: document.getElementById('password').value,
+                    role: document.getElementById('role').value,
+                    currshift: document.getElementById('currshift').value
+                };
+
+                try {
+                    // Hitting your existing AuthController signup endpoint
+                    const response = await fetch('/auth/signup', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    const responseText = await response.text(); // Your controller returns a String
+
+                    if (response.ok) {
+                        messageBox.className = "bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4 block";
+                        messageBox.innerHTML = `<strong>Success!</strong> ${responseText}`;
+                        this.reset(); // Clear the form
+                    } else {
+                        messageBox.className = "bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4 block";
+                        messageBox.innerHTML = `<strong>Error!</strong> ${responseText}`;
+                    }
+                } catch (error) {
+                    console.error("Signup failed:", error);
+                    messageBox.className = "bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4 block";
+                    messageBox.innerHTML = "<strong>System Error!</strong> Could not connect to the server.";
+                }
+            });
+        </script>
+    </th:block>
+
+</body>
+</html>

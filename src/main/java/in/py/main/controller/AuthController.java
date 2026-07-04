@@ -39,10 +39,10 @@ public class AuthController {
 		newUser.setPassword(passwordEncoder.encode(signUpDto.getPassword()));
 		newUser.setStatus("ACTIVE");
 		userRepository.save(newUser);
-		return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully");
+		return ResponseEntity.status(HttpStatus.CREATED).body("Gateman registered successfully");
 	}
 	
-	@PostMapping("/login")
+	/*@PostMapping("/login")
 	public ResponseEntity<?> loginUser(@RequestBody LoginDto loginDto ){
 		try {
 			Authentication authentication=authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()));
@@ -62,7 +62,7 @@ public class AuthController {
 		catch (Exception e) {
 			// TODO: handle exception
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
-		}
+		}*/
 	}
 
-}
+

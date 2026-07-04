@@ -33,6 +33,7 @@ public class Train {
 	
 	@OneToMany(mappedBy = "train",  cascade = CascadeType.ALL, orphanRemoval =true, fetch = FetchType.LAZY)
 	private List<CrossingLog> crossingLogs;
-	
+	@OneToMany(mappedBy ="train", cascade = CascadeType.ALL, orphanRemoval =true, fetch = FetchType.LAZY )
+	private List<DailyCrossingLogsRealTime> dailyCrossingLogsRealTimes;
 
 }

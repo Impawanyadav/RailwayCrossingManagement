@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indian Railway - Login</title>
+    <!-- Tailwind CSS for rapid, clean styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap" rel="stylesheet">
+    <style>
+        .brand-font { font-family: 'Caveat', cursive; letter-spacing: 2px; }
+        .teal-bg { background-color: #1c7c8c; }
+        .teal-btn-hover:hover { background-color: #15626f; }
+        .header-center { background-color: #2d2d2d; }
+    </style>
+</head>
+<body class="bg-gray-100 flex flex-col min-h-screen">
+
+    <!-- Simple Header -->
+    <nav class="flex h-16 w-full shadow-md header-center">
+        <div class="flex-1 flex items-center justify-center">
+            <h1 class="text-white text-4xl brand-font tracking-wider">Indian Railway</h1>
+        </div>
+    </nav>
+
+    <!-- Login Form Container -->
+    <div class="flex-grow flex items-center justify-center">
+        <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md border-t-4 border-[#1c7c8c]">
+            <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">System Login</h2>
+
+            <!-- Spring Security Error Message -->
+            <div th:if="${param.error}" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 text-center">
+                Invalid email or password.
+            </div>
+
+            <!-- Spring Security Logout Message -->
+            <div th:if="${param.logout}" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4 text-center">
+                You have been logged out successfully.
+            </div>
+
+            <!-- Note: Spring Security automatically handles the POST to /login -->
+            <form th:action="@{/login}" method="post" class="space-y-6">
+                
+                <div>
+                    <label for="username" class="block text-sm font-medium text-gray-700">Email Address</label>
+                    <!-- Spring Security looks for 'username' by default -->
+                    <input type="email" id="username" name="username" required
+                        class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-[#1c7c8c] focus:border-[#1c7c8c]"
+                        placeholder="Gateman@railway.in">
+                </div>
+
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                    <input type="password" id="password" name="password" required
+                        class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-[#1c7c8c] focus:border-[#1c7c8c]"
+                        placeholder="••••••••">
+                </div>
+
+                <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white teal-bg teal-btn-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1c7c8c] transition-colors">
+                    Sign In
+                </button>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

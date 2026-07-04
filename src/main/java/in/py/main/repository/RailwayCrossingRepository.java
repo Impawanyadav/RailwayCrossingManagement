@@ -1,5 +1,6 @@
 package in.py.main.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,6 +18,15 @@ public interface RailwayCrossingRepository extends JpaRepository<RailwayCrossing
 	
 	@Query("SELECT r FROM RailwayCrossing r WHERE :id IS NULL OR CAST(r.id AS string) LIKE CONCAT(:id, '%')")
     List<RailwayCrossing> searchByIdOrLoadAll(@Param("id") Long id);
+	@Query("SELECT c FROM RailwayCrossing c " +
+	           "WHERE c.status = 'ACTIVE' " +
+	           "AND c.id NOT IN (" +
+	           "    SELECT d.railwayCrossing.id FROM DutyAssign d " +
+	           "    WHERE d.dutyDate = :dutyDate AND d.shift = :shift" +
+	           ")")
+	    List<RailwayCrossing> findAvailableCrossings(
+	            @Param("dutyDate") LocalDate dutyDate, 
+	            @Param("shift") String shift);
 	
 	
 }

@@ -36,7 +36,7 @@ public class User {
 	private String email;
 	
 	@Column
-	private String currshift;
+	private String currShift;
 	
 	@Column
 	private String password;
@@ -45,6 +45,9 @@ public class User {
 	private String status;
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval =true, fetch = FetchType.LAZY)
 	private List<DutyAssign> dutyAssign;
+	
+	@OneToMany(mappedBy ="user", cascade = CascadeType.ALL, orphanRemoval =true, fetch = FetchType.LAZY )
+	private List<DailyCrossingLogsRealTime> dailyCrossingLogsRealTimes;
 	public Long getId() {
 		return id;
 	}

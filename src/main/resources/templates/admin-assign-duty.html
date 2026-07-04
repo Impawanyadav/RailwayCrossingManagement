@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{base-layout}">
+<head>
+    <title>Auto-Assign Gateman Duty</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+
+    <div layout:fragment="content" class="p-8">
+        
+        <!-- Header Section with Back to Dashboard -->
+        <div class="flex justify-between items-center border-b-2 border-[#1c7c8c] pb-4 mb-8">
+            <h2 class="text-3xl font-bold text-gray-800">Assign Duty</h2>
+            <a th:href="@{/admin/dashboard}" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded transition-colors shadow">
+                <i class="fa-solid fa-arrow-left mr-2"></i> Back to Dashboard
+            </a>
+        </div>
+
+        <div class="max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-8">
+            
+            <!-- Step 1: Select Criteria & Choose Crossing -->
+            <div class="bg-white shadow-lg rounded-lg p-6 border border-gray-200">
+                <h3 class="text-xl font-bold mb-4 text-[#1c7c8c]">1. Select Criteria</h3>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700">Duty Date</label>
+                        <input type="date" id="dutyDate" onchange="fetchAvailableCrossings()" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#1c7c8c] outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700">Shift</label>
+                        <select id="shift" onchange="fetchAvailableCrossings()" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#1c7c8c] outline-none">
+                            <option value="MORNING">Morning</option>
+                            <option value="EVENING">Evening</option>
+                            <option value="NIGHT">Night</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mt-6">
+                    <h3 class="text-xl font-bold mb-4 text-[#1c7c8c]">2. Select Available Crossing</h3>
+                    <select id="crossingId" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#1c7c8c] outline-none">
+                        <option value="">Select a crossing...</option>
+                    </select>
+                </div>
+
+                <button type="button" onclick="submitDuty()" class="mt-6 w-full bg-[#1c7c8c] text-white py-3 rounded-md font-bold hover:bg-[#15626f] transition-colors shadow-md">
+                    <i class="fa-solid fa-user-plus mr-2"></i> Auto Assign Duty
+                </button>
+                
+                <div id="messageBox" class="mt-4 hidden p-3 rounded text-sm font-medium"></div>
+            </div>
+
+            <!-- Helpful Information -->
+            <div class="p-6 bg-gray-50 rounded-lg border border-dashed border-gray-300">
+                <h3 class="font-bold text-gray-700 mb-2">Instructions:</h3>
+                <ul class="list-disc pl-5 text-sm text-gray-600 space-y-2">
+                    <li>Select the <strong>Date</strong> and <strong>Shift</strong> you need to cover.</li>
+                    <li>The system will automatically find crossings that are currently unassigned.</li>
+                    <li>Select the desired Crossing from the dropdown list.</li>
+                    <li>Click <strong>Auto Assign</strong> to trigger the allocation algorithm.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <th:block layout:fragment="page-scripts">
+        <script>
+            // Set today's date as min
+            document.getElementById('dutyDate').setAttribute('min', new Date().toISOString().split('T')[0]);
+
+            // Fetch available crossings dynamically
+            async function fetchAvailableCrossings() {
+                const date = document.getElementById('dutyDate').value;
+                const shift = document.getElementById('shift').value;
+                const crossingSelect = document.getElementById('crossingId');
+
+                if (!date || !shift) return;
+
+                try {
+                    const response = await fetch(`/api/crossings/available?dutyDate=${date}&shift=${shift}`);
+                    const data = await response.json();
+                    
+                    crossingSelect.innerHTML = '<option value="">Select a crossing...</option>';
+                    if (data.length === 0) {
+                        crossingSelect.innerHTML = '<option value="">No unassigned crossings found</option>';
+                    } else {
+                        data.forEach(c => {
+                            crossingSelect.innerHTML += `<option value="${c.id}">${c.address} (ID: ${c.id})</option>`;
+                        });
+                    }
+                } catch (e) {
+                    console.error("Error fetching crossings:", e);
+                }
+            }
+
+            // Submit the assignment
+            async function submitDuty() {
+                const messageBox = document.getElementById('messageBox');
+                const crossingId = document.getElementById('crossingId').value;
+                
+                if (!crossingId) {
+                    alert("Please select a crossing first!");
+                    return;
+                }
+
+                const payload = {
+                    crossingId: parseInt(crossingId),
+                    dutyDate: document.getElementById('dutyDate').value,
+                    shift: document.getElementById('shift').value
+                };
+
+                try {
+                    const response = await fetch('/api/admin/assignDuty', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    const msg = await response.text();
+                    messageBox.classList.remove('hidden');
+                    messageBox.className = response.ok 
+                        ? "mt-4 p-3 bg-green-100 text-green-800 rounded border-l-4 border-green-500" 
+                        : "mt-4 p-3 bg-red-100 text-red-800 rounded border-l-4 border-red-500";
+                    messageBox.innerText = msg;
+                } catch (error) {
+                    messageBox.classList.remove('hidden');
+                    messageBox.className = "mt-4 p-3 bg-red-100 text-red-800 rounded border-l-4 border-red-500";
+                    messageBox.innerText = "System Error: Could not connect to the server.";
+                }
+            }
+        </script>
+    </th:block>
+</body>
+</html>
