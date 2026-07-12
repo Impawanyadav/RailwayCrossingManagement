@@ -14,10 +14,9 @@ import in.py.main.entity.RailwayCrossing;
 @Repository
 public interface RailwayCrossingRepository extends JpaRepository<RailwayCrossing, Long>{
     
+   
+    Optional<RailwayCrossing> findById(Long id);
     
-    @Query("SELECT r FROM RailwayCrossing r LEFT JOIN FETCH r.logs WHERE r.id = :id")
-    Optional<RailwayCrossing> findById(@Param("id") Long id);
-	
     @Query("SELECT r FROM RailwayCrossing r WHERE :id IS NULL OR CAST(r.id AS string) LIKE CONCAT(:id, '%')")
     List<RailwayCrossing> searchByIdOrLoadAll(@Param("id") Long id);
 
