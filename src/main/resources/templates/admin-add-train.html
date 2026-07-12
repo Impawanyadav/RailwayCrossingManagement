@@ -90,11 +90,3 @@
     </th:block>
 </body>
 </html>
-```eof
-
-### Final Checklist to fix "500 Errors":
-1. **Clean Project:** Go to **Project -> Clean** in Eclipse.
-2. **Hard Refresh:** Open your page in the browser and press `Ctrl + F5` (or `Cmd + Shift + R`). This clears the cache so the browser stops trying to run the old JavaScript that was causing the `fa` identifier error.
-3. **Verify Route:** Ensure your `AdminRestController` has a method exactly like:
-   `@PostMapping("/addTrain")`
-   If the browser gives a 404 in the Network tab, your Java controller's `@PostMapping` path doesn't match the `fetch('/api/admin/addTrain', ...)` string.
