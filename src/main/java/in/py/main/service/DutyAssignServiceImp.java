@@ -53,7 +53,7 @@ public class DutyAssignServiceImp implements DutyAssignService {
 		dutyAssignRepository.save(automatedDuty);
 	
 	
-		return "Success! Gateman Id: " + allocatedGateman.getId()+"  Name: " +allocatedGateman.getName() 
+		return "Success! Gateman email: " + allocatedGateman.getEmail()+"  Name: " +allocatedGateman.getName() 
         + " Assigned to Crossing " + railwayCrossing.getAddress()+ " for the " + shiftString + " shift on " + automatedDuty.getDutyDate();
 	}
 
